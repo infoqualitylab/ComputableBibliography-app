@@ -167,4 +167,4 @@ def server(input, output, session):
             create_primary_location_frequency_plot(app_query()['primary_location_dictionary'])
         return fig6
 
-app = App(app_ui, server, debug=True)
+app = App(app_ui, server, debug=False)

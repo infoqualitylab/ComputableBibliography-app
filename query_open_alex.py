@@ -1,3 +1,4 @@
+from re import search
 import requests
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -7,7 +8,13 @@ import time
 from collections import Counter
 
 
-def read_input_file(filename):
+def read_input_file(filename: str):
+    """
+    Reads an input text file and returns it as a list.
+
+    :param filename: path to the input file
+    :return: file contents as a list
+    """
     print(filename)
     file = open(filename, "r")
     input_data = file.read()
@@ -16,20 +23,42 @@ def read_input_file(filename):
     return input_list
 
 
-def clean_input_list(input_list):
+def clean_input_list(input_list: list):
+    """
+    Cleans common errors in input list to get DOIs in format "https://doi.org/10.XXX/XXX" or "doi:10.XXXX/XXX",
+    removing duplicates.
+
+    :param input_list: list of DOIs
+    :return: cleaned list of DOIs
+    """
     cleaned_input_list = []
     for item in input_list:
         if item == '':
             continue
         elif re.search(r'^10\.', item):
-            url_item = f"https://doi.org/{item}"
+            search_item = f"https://doi.org/{item}"
+        elif re.search(r'^DOI:', item):
+            # OpenAlex can handle searching DOIs listed as "doi:10.XXXX/XXXX", but not with upper case "DOI:"
+            new_item = re.sub(r'DOI:', 'doi:', item, 1)
+            search_item = new_item
+        elif re.search(r'^doi.org', item):
+            new_item = re.sub(r'doi.org/', '', item, 1)
+            search_item = f"https://doi.org/{new_item}"
         else:
-            url_item = item
-        cleaned_input_list.append(url_item.strip())
+            search_item = item
+        cleaned_input_list.append(search_item.strip())
+        cleaned_input_list = list(set(cleaned_input_list))
     return cleaned_input_list
 
 
-def query_open_alex(cleaned_input_list):
+def query_open_alex(cleaned_input_list: list):
+    """
+    Queries OpenAlex for attributes of items with specific DOIs. See OpenAlex Work Object documentation for more
+    details: https://docs.openalex.org/api-entities/works/work-object.
+
+    :param cleaned_input_list: input list of DOIs in format "https://doi.org/10.XXX/XXX" or "doi:10.XXXX/XXX"
+    :return: list of dictionaries with attributes for Work objects from returned queries in OpenAlex.
+    """
     identifier_list = cleaned_input_list
     identifier_with_error_list = []
 
@@ -78,6 +107,19 @@ def print_for_testing(authorships_dictionary,
                       publication_year_dictionary,
                       primary_location_dictionary,
                       identifier_with_error_list):
+    """
+    Prints query output when needed for testing.
+
+    :param authorships_dictionary: dictionary of authorships for DOIs from OpenAlex
+    :param concepts_dictionary: dictionary of concepts for DOIs from OpenAlex
+    :param keywords_dictionary: dictionary of keywords for DOIs from OpenAlex
+    :param topics_dictionary: dictionary of topics for DOIs from OpenAlex
+    :param type_dictionary: dictionary of item type for DOIs from OpenAlex
+    :param publication_year_dictionary: dictionary of publication year for DOIs from OpenAlex
+    :param primary_location_dictionary: dictionary of primary location for DOIs from OpenAlex
+    :param identifier_with_error_list: dictionary of identifier with errors when querying OpenAlex
+    :return: print
+    """
     print(authorships_dictionary)
     print(concepts_dictionary)
     print(keywords_dictionary)
@@ -88,7 +130,16 @@ def print_for_testing(authorships_dictionary,
     print(identifier_with_error_list)
 
 
-def create_type_frequency_plot(type_dictionary, primary_location_dictionary):
+def create_type_frequency_plot(type_dictionary: dict, primary_location_dictionary: dict):
+    """
+    Creates frequency plot for item types.
+
+    :param type_dictionary: dictionary of item type for DOIs from OpenAlex
+    :param primary_location_dictionary: dictionary of primary location for DOIs from OpenAlex. Used to separate
+    conference proceedings from journal articles.
+    :return: plot of item type frequency, pie chart of item type frequency, sorted frequency dictionary, and
+    list of items with type None.
+    """
     type_list = []
     type_none_list = []
     for doi_key, response_value in type_dictionary.items():
@@ -153,7 +204,12 @@ def create_type_frequency_plot(type_dictionary, primary_location_dictionary):
     return fig1, fig2, sorted_type_frequency, type_none_list
 
 
-def create_year_frequency_plot(publication_year_dictionary):
+def create_year_frequency_plot(publication_year_dictionary: dict):
+    """
+    Creates frequency plot for publication years.
+    :param publication_year_dictionary: dictionary of publication year for DOIs from OpenAlex
+    :return: publication year frequency plot and sorted frequency dictionary
+    """
     year_list = []
     year_none_list = []
     for doi_key, response_value in publication_year_dictionary.items():
@@ -187,7 +243,13 @@ def create_year_frequency_plot(publication_year_dictionary):
     return fig3, sorted_year_frequency
 
 
-def create_keyword_frequency_plot(keywords_dictionary):
+def create_keyword_frequency_plot(keywords_dictionary: dict):
+    """
+    Creates frequency plot for keywords.
+
+    :param keywords_dictionary: dictionary of keywords for DOIs from OpenAlex
+    :return: plot of keyword frequency, sorted frequency dictionary, and list of items with keyword None.
+    """
     keyword_list = []
     keyword_none_list = []
     for doi_key, response_value in keywords_dictionary.items():
@@ -222,7 +284,13 @@ def create_keyword_frequency_plot(keywords_dictionary):
     return fig4, sorted_keyword_frequency, keyword_none_list
 
 
-def create_concepts_frequency_plot(concepts_dictionary):
+def create_concepts_frequency_plot(concepts_dictionary: dict):
+    """
+    Creates frequency plot for most and least frequent concepts.
+
+    :param concepts_dictionary: dictionary of concepts for DOIs from OpenAlex
+    :return: plot of concept frequency, sorted frequency dictionary, and list of items with concept None.
+    """
     concepts_list = []
     concepts_none_list = []
     for doi_key, response_value in concepts_dictionary.items():
@@ -268,7 +336,13 @@ def create_concepts_frequency_plot(concepts_dictionary):
     return fig5, sorted_concepts_frequency, concepts_none_list
 
 
-def create_primary_location_frequency_plot(primary_location_dictionary):
+def create_primary_location_frequency_plot(primary_location_dictionary: dict):
+    """
+    Creates frequency plot for primary locations (venues).
+
+    :param primary_location_dictionary: dictionary of primary locations for DOIs from OpenAlex
+    :return: plot of location frequency, sorted frequency dictionary, and list of items with primary location None.
+    """
     primary_location_list = []
     primary_location_none_list = []
     for doi_key, response_value in primary_location_dictionary.items():
@@ -320,7 +394,7 @@ def create_primary_location_frequency_plot(primary_location_dictionary):
 
 def main():
     print("Reading input list...")
-    input_list = read_input_file(filename="data/argmining.txt")
+    input_list = read_input_file(filename="data/zotero-export.txt")
     print("Input list read.")
     print("Cleaning input list...")
     cleaned_input_list = clean_input_list(input_list)

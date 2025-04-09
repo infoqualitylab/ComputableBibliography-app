@@ -1,6 +1,5 @@
 from shiny import App, render, ui, reactive, req
 from query_open_alex import *
-import matplotlib.pyplot as plt
 # import shinyswatch
 
 
@@ -18,6 +17,46 @@ app_ui = ui.page_fluid(
     ui.panel_title(ui.h1("Computable Bibliography"), window_title="Computable Bibliography"),
 
     ui.h3("Created by the Information Quality Lab"),
+    ui.div(
+    ui.markdown(
+        """
+        ### What this application does:
+        This application queries [OpenAlex](https://openalex.org/) for information about submitted publications, 
+        then returns text versions of the information retrieved as well as visualizations comparing the submitted publications 
+        in aggregate. An example use case can be seen below.
+        
+        ### How to use this application:
+        ##### 1. Create a text file (.txt file) of [Digital Object Identifiers (DOIs)](https://en.wikipedia.org/wiki/Digital_object_identifier) for all publications you would like to compare.
+        In a citation manager such as [Zotero](https://www.zotero.org/), you can create this by:
+        1. exporting a library or collection to .csv format
+        2. copying the DOI column of the .csv file
+        3. pasting the DOI column into a text editor such as [Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3?hl=en-us&gl=US) 
+        (Windows) or [TextEdit](https://support.apple.com/guide/textedit/welcome/mac) (Mac)
+        4. saving the resulting file
+        
+        You can also manually copy and paste DOIs into a text file using text editor such as [Notepad](https://apps.microsoft.com/detail/9msmlrh6lzf3?hl=en-us&gl=US) 
+        (Windows) or [TextEdit](https://support.apple.com/guide/textedit/welcome/mac) (Mac). 
+        
+        PLEASE NOTE: 
+        - DOIs can be in the following formats:
+          - https://doi.org/10.XXX/XXXX or
+          - doi:10.XXXX/XXXX or
+          - 10.XXXX/XXXX
+        - The app will ignore blank/empty lines
+        
+        ##### 2. On the webpage, click "Browse..." and select the text file you created. 
+        Functionality for files other than text/.txt is forthcoming.
+        
+        ##### 3. Review information listed in "Input data". This will show cleaned versions of the DOIs you submitted
+        
+        ##### 4. Hit the button to query OpenAlex
+        This will query the OpenAlex API for each DOI you submit. Large requests can take some time.
+        
+        ##### 5. View results
+        You will be able to copy identifiers that had errors when querying OpenAlex and python dictionaries used to create the 
+        visualizations shown. Code to create the visualizations is stored on the [Information Quality Lab GitHub](https://github.com/infoqualitylab/ComputableBibliography-app)
+        """
+        )),
 
     ui.panel_well(
         ui.h2("Upload a DOI file:"),

@@ -1,3 +1,4 @@
+import string
 from re import search
 import requests
 import matplotlib.pyplot as plt
@@ -177,17 +178,18 @@ def create_type_frequency_plot(type_dictionary: dict, primary_location_dictionar
     # plt.show()
 
     label_list = []
-    count_list = []
-    count = 1
+    alphabet_list = []
+    alphabet = string.ascii_letters
+    count = 0
     for key in sorted_type_frequency.keys():
         if key == 'journal\narticle':
-            label = f"{count} journal article"
+            label = f"{alphabet[count]} journal article"
         elif key == 'conference\nproceeding':
-            label = f"{count} conference proceeding"
+            label = f"{alphabet[count]} conference proceeding"
         else:
-            label = f"{count} {key}"
+            label = f"{alphabet[count]} {key}"
         label_list.append(label)
-        count_list.append(count)
+        alphabet_list.append(alphabet[count])
         count += 1
 
     fig2, ax2 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
@@ -197,7 +199,7 @@ def create_type_frequency_plot(type_dictionary: dict, primary_location_dictionar
                 f'Excludes {len(type_none_list)} items with None value out of {len(type_dictionary)} total items',
                 horizontalalignment='left',
                 size='x-small')
-    ax2.pie(sorted_type_frequency.values(), labels=count_list, autopct='%1.1f%%')
+    ax2.pie(sorted_type_frequency.values(), labels=alphabet_list, autopct='%1.1f%%')
     plt.legend(labels=label_list, loc='upper right')
     # plt.show()
 
@@ -266,8 +268,8 @@ def create_keyword_frequency_plot(keywords_dictionary: dict):
     fig_width = max(4.0, fig_height * 1)
 
     fig4, ax4 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
-    ax4.barh(sorted_keyword_frequency.keys(), sorted_keyword_frequency.values())
-    ax4.set_title("Frequency of Keywords")
+    ax4.barh(list(sorted_keyword_frequency.keys())[-25:], list(sorted_keyword_frequency.values())[-25:])
+    ax4.set_title("Most Frequent of Keywords\n")
     plt.figtext(0.01,
                 0.01,
                 f'Excludes {len(keyword_none_list)} items with None value '
@@ -278,7 +280,7 @@ def create_keyword_frequency_plot(keywords_dictionary: dict):
     ax4.set_xlabel("Frequency")
     ax4.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     y_max = len(sorted_keyword_frequency)
-    plt.ylim(-1, y_max)
+    plt.ylim(-1, 25)
     ax4.bar_label(ax4.containers[0], label_type='edge', padding=0.5)
     # plt.show()
     return fig4, sorted_keyword_frequency, keyword_none_list
@@ -306,31 +308,22 @@ def create_concepts_frequency_plot(concepts_dictionary: dict):
     fig_width = 6.0
     fig_height = 5.0
 
-    fig5, (ax1, ax2) = plt.subplots(2, figsize=(fig_width, fig_height), layout="tight", sharex=True)
+    fig5, ax1 = plt.subplots(figsize=(fig_width, fig_height), layout="tight")
     plt.figtext(0.01,
                 0.01,
                 f'Excludes {len(concepts_none_list)} items with None value '
                 f'out of {len(concepts_dictionary)} total items',
                 horizontalalignment='left',
                 size='x-small')
-    ax1.barh(list(sorted_concepts_frequency.keys())[-10:], list(sorted_concepts_frequency.values())[-10:])
-    ax1.set_title("Ten Most Frequent Concepts\n(with alphabetical ordering)")
+    ax1.barh(list(sorted_concepts_frequency.keys())[-20:], list(sorted_concepts_frequency.values())[-20:])
+    ax1.set_title("Twenty Most Frequent Concepts\n(with alphabetical ordering)")
     ax1.set_ylabel("Concept")
     ax1.set_xlabel("Frequency")
     ax1.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
     ax1.tick_params(axis='x', labelbottom=True)
     ax1.tick_params(axis='y', labelsize='x-small')
-    ax1.set_ylim(-1, 10)
+    ax1.set_ylim(-1, 20)
     ax1.bar_label(ax1.containers[0], label_type='edge', padding=0.5)
-
-    ax2.barh(list(sorted_concepts_frequency.keys())[:10], list(sorted_concepts_frequency.values())[:10])
-    ax2.set_title("Ten Least Frequent Concepts\n(with alphabetical ordering)")
-    ax2.set_ylabel("Concept")
-    ax2.set_xlabel("Frequency")
-    ax2.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax2.tick_params(axis='y', labelsize='x-small')
-    ax2.set_ylim(-1, 10)
-    ax2.bar_label(ax2.containers[0], label_type='edge', padding=0.5)
     # plt.show()
 
     return fig5, sorted_concepts_frequency, concepts_none_list
@@ -360,11 +353,14 @@ def create_primary_location_frequency_plot(primary_location_dictionary: dict):
     fig_width = max(9.0, fig_height * 0.7)
 
     label_list = []
-    count = len(sorted_primary_location_frequency)
+    alphabet_list = []
+    alphabet = string.ascii_letters
+    count = len(sorted_primary_location_frequency) - 1
     for key in sorted_primary_location_frequency.keys():
         truncated_key = key[:67] + "..." if len(key) > 67 else key
-        label = f"{count} {truncated_key}"
+        label = f"{alphabet[count]} {truncated_key}"
         label_list.append(label)
+        alphabet_list.append(alphabet[count])
         count = count - 1
 
     fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
@@ -372,7 +368,7 @@ def create_primary_location_frequency_plot(primary_location_dictionary: dict):
              sorted_primary_location_frequency.values(),
              color=plt.cm.viridis(np.linspace(0, 1, len(sorted_primary_location_frequency.values()))),
              label=label_list,
-             tick_label=range(len(label_list), 0, -1))
+             tick_label=alphabet_list)
     ax6.set_title("Frequency of Publishers")
     ax6.set_ylabel("Publisher")
     ax6.set_xlabel("Frequency")

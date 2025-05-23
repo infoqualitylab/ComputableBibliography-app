@@ -12,10 +12,10 @@ multiple plots to visualize trends. The file also measures DOIs that return no i
 
 Follow these steps to set up the code
 
-    Install required packages listed in requirements.txt into your environment
-    Open folder in Visual Studio Code (currently using the November 2024 version 1.96)
-    Run app.py
+- Install required packages listed in requirements.txt into your environment
+- Open folder in Visual Studio Code (currently using the November 2024 version 1.96)
+- Run app.py
 
 ## Contributors
 
-    Corinne McCumber (@corinnemc) drafted initial code for the app
+- Corinne McCumber (@corinnemc) drafted initial code for the app

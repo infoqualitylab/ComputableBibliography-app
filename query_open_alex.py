@@ -6,6 +6,7 @@ import matplotlib.ticker as ticker
 import numpy as np
 import re
 import time
+import itertools
 from collections import Counter
 
 
@@ -100,6 +101,17 @@ def query_open_alex(cleaned_input_list: list):
             identifier_with_error_list)
 
 
+def create_alphabet_tick_labels():
+    alphabet = string.ascii_letters
+    alphabet_tick_labels_list = []
+    for i in range(len(alphabet)):
+        alphabet_tick_labels_list.append(alphabet[i])
+    for j in range(len(alphabet)):
+        for k in range(len(alphabet)):
+            alphabet_tick_labels_list.append(alphabet[j] + alphabet[k])
+    return alphabet_tick_labels_list
+
+
 def print_for_testing(authorships_dictionary,
                       concepts_dictionary,
                       keywords_dictionary,
@@ -179,7 +191,7 @@ def create_type_frequency_plot(type_dictionary: dict, primary_location_dictionar
 
     label_list = []
     alphabet_list = []
-    alphabet = string.ascii_letters
+    alphabet = create_alphabet_tick_labels()
     count = 0
     for key in sorted_type_frequency.keys():
         if key == 'journal\narticle':
@@ -354,7 +366,7 @@ def create_primary_location_frequency_plot(primary_location_dictionary: dict):
 
     label_list = []
     alphabet_list = []
-    alphabet = string.ascii_letters
+    alphabet = create_alphabet_tick_labels()
     count = len(sorted_primary_location_frequency) - 1
     for key in sorted_primary_location_frequency.keys():
         truncated_key = key[:67] + "..." if len(key) > 67 else key

@@ -86,7 +86,7 @@ Code to create the visualizations is available via the [Information Quality Lab 
     - OpenAlex lists the publication's primary location as "Proceedings of the **60th** Annual Meeting of the Association for Computational
     Linguistics (Volume 1: Long Papers)". Querying "https://api.openalex.org/works/https://doi.org/10.18653/v1/P18-1017"
     - Actual primary location (from following DOI) is "Proceedings of the **56th** Annual Meeting of the Association for
-    Computational Linguistics (Volume 1: Long Papers) 
+    Computational Linguistics (Volume 1: Long Papers)"
  - Publication https://doi.org/10.1000/182
     - OpenAlex lists publication as "Algorithms based on k-mers for ancient oral metagenomics", a dissertation. Querying
     "https://api.openalex.org/works/https://doi.org/10.1000/182"

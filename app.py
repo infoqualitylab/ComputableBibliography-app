@@ -20,7 +20,16 @@ home_page = ui.page_fluid(
         ### What this application does:
           This application queries [OpenAlex](https://openalex.org/) for information about publications submitted in a
           DOI file. It then returns text versions of the information retrieved and visualizations comparing the 
-          publications in aggregate. See the "How to use this app" and "Example usage" pages for more information.
+          publications in aggregate. Specifically it uses the OpenAlex 
+          [Work object](https://docs.openalex.org/api-entities/works/work-object),
+          parsing JSON files for each publication queried.
+
+          See the "How to use this app" and "Example usage" pages for more information.
+          
+        #### A note on usage and limitations:
+          Some errors in OpenAlex metadata have been observed. If OpenAlex metadata is inaccurate or missing, the 
+          visualizations and text returned by the Computable Bibliography will also be inaccurate. Further, only 
+          publications with a valid DOI generate results, which excludes many types of academic works. 
         """
     ),
 
@@ -57,9 +66,9 @@ home_page = ui.page_fluid(
         ui.output_plot("type_frequency", height='90vh', width='90vw'),
         ui.output_plot("type_frequency_pie", height='90vh', width='90vw'),
         ui.output_plot("year_frequency", height='90vh', width='90vw'),
+        ui.output_plot("primary_location_frequency", height='90vh', width='90vw'),
         ui.output_plot("keyword_frequency", height='90vh', width='90vw'),
         ui.output_plot("concepts_frequency", height='90vh', width='90vw'),
-        ui.output_plot("primary_location_frequency", height='90vh', width='90vw')
     )
 )
 

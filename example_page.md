@@ -1,5 +1,7 @@
 # Example use of the Computable Bibliography
 
+<hr style="border:2px solid gray">
+
 The following images were generated using the Computable Bibliography. 
 <a id="raw-url" href="https://raw.githubusercontent.com/infoqualitylab/ComputableBibliography-app/refs/heads/main/COVID-CB-example.txt"> Download the DOI file used for generation</a>; 
 it is taken from an August 2020 workshop held by the National Academies of Science, Engineering, and Medicine on airborne

@@ -1,4 +1,7 @@
 # How to use the Computable Bibliography
+
+<hr style="border:2px solid gray">
+
 ### What this application does:
 This application queries [OpenAlex](https://openalex.org/) for information about publications submitted in a DOI file, 
 which is described below. It then returns text versions of the information retrieved and visualizations comparing the

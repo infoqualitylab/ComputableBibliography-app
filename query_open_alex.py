@@ -257,6 +257,65 @@ def create_year_frequency_plot(publication_year_dictionary: dict):
     return fig3, sorted_year_frequency
 
 
+def create_primary_location_frequency_plot(primary_location_dictionary: dict):
+    """
+    Creates frequency plot for primary locations (venues).
+
+    :param primary_location_dictionary: dictionary of primary locations for DOIs from OpenAlex
+    :return: plot of location frequency, sorted frequency dictionary, and list of items with primary location None.
+    """
+    primary_location_list = []
+    primary_location_none_list = []
+    for doi_key, response_value in primary_location_dictionary.items():
+        if response_value["source"] is None:
+            primary_location_none_list.append(doi_key)
+        else:
+            source = response_value["source"]["display_name"]
+            primary_location_list.append(source)
+
+    primary_location_frequency = Counter(primary_location_list)
+    sorted_primary_location_frequency = dict(sorted(primary_location_frequency.items(),
+                                                    key=lambda x: (x[1], x[0].lower())))
+
+    fig_height = max(6.0, len(sorted_primary_location_frequency) * 0.462)
+    fig_width = max(9.0, fig_height * 0.7)
+
+    label_list = []
+    alphabet_list = []
+    alphabet = create_alphabet_tick_labels()
+    count = len(sorted_primary_location_frequency) - 1
+    for key in sorted_primary_location_frequency.keys():
+        truncated_key = key[:67] + "..." if len(key) > 67 else key
+        label = f"{alphabet[count]} {truncated_key}"
+        label_list.append(label)
+        alphabet_list.append(alphabet[count])
+        count = count - 1
+
+    fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
+    ax6.barh(sorted_primary_location_frequency.keys(),
+             sorted_primary_location_frequency.values(),
+             color=plt.cm.viridis(np.linspace(0, 1, len(sorted_primary_location_frequency.values()))),
+             label=label_list,
+             tick_label=alphabet_list)
+    ax6.set_title("Frequency of Publishers")
+    ax6.set_ylabel("Publisher")
+    ax6.set_xlabel("Frequency")
+    plt.figtext(0.01,
+                0.01,
+                f'Excludes {len(primary_location_none_list)} items with None value '
+                f'out of {len(primary_location_dictionary)} total items',
+                horizontalalignment='left',
+                size='x-small')
+    y_max = len(sorted_primary_location_frequency)
+    plt.ylim(-1, y_max)
+    ax6.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+    ax6.legend(reverse=True, loc='lower right', framealpha=1, fontsize='x-small')
+    ax6.bar_label(ax6.containers[0], label_type='edge', padding=0.5)
+    # plt.show()
+
+    return fig6, sorted_primary_location_frequency, primary_location_none_list
+
+
 def create_keyword_frequency_plot(keywords_dictionary: dict):
     """
     Creates frequency plot for keywords.
@@ -339,65 +398,6 @@ def create_concepts_frequency_plot(concepts_dictionary: dict):
     # plt.show()
 
     return fig5, sorted_concepts_frequency, concepts_none_list
-
-
-def create_primary_location_frequency_plot(primary_location_dictionary: dict):
-    """
-    Creates frequency plot for primary locations (venues).
-
-    :param primary_location_dictionary: dictionary of primary locations for DOIs from OpenAlex
-    :return: plot of location frequency, sorted frequency dictionary, and list of items with primary location None.
-    """
-    primary_location_list = []
-    primary_location_none_list = []
-    for doi_key, response_value in primary_location_dictionary.items():
-        if response_value["source"] is None:
-            primary_location_none_list.append(doi_key)
-        else:
-            source = response_value["source"]["display_name"]
-            primary_location_list.append(source)
-
-    primary_location_frequency = Counter(primary_location_list)
-    sorted_primary_location_frequency = dict(sorted(primary_location_frequency.items(),
-                                                    key=lambda x: (x[1], x[0].lower())))
-
-    fig_height = max(6.0, len(sorted_primary_location_frequency) * 0.35)
-    fig_width = max(9.0, fig_height * 0.7)
-
-    label_list = []
-    alphabet_list = []
-    alphabet = create_alphabet_tick_labels()
-    count = len(sorted_primary_location_frequency) - 1
-    for key in sorted_primary_location_frequency.keys():
-        truncated_key = key[:67] + "..." if len(key) > 67 else key
-        label = f"{alphabet[count]} {truncated_key}"
-        label_list.append(label)
-        alphabet_list.append(alphabet[count])
-        count = count - 1
-
-    fig6, ax6 = plt.subplots(figsize=(fig_width, fig_height), layout="constrained")
-    ax6.barh(sorted_primary_location_frequency.keys(),
-             sorted_primary_location_frequency.values(),
-             color=plt.cm.viridis(np.linspace(0, 1, len(sorted_primary_location_frequency.values()))),
-             label=label_list,
-             tick_label=alphabet_list)
-    ax6.set_title("Frequency of Publishers")
-    ax6.set_ylabel("Publisher")
-    ax6.set_xlabel("Frequency")
-    plt.figtext(0.01,
-                0.01,
-                f'Excludes {len(primary_location_none_list)} items with None value '
-                f'out of {len(primary_location_dictionary)} total items',
-                horizontalalignment='left',
-                size='x-small')
-    y_max = len(sorted_primary_location_frequency)
-    plt.ylim(-1, y_max)
-    ax6.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-    ax6.legend(reverse=True, loc='lower right', framealpha=1, fontsize='x-small')
-    ax6.bar_label(ax6.containers[0], label_type='edge', padding=0.5)
-    # plt.show()
-
-    return fig6, sorted_primary_location_frequency, primary_location_none_list
 
 
 def main():

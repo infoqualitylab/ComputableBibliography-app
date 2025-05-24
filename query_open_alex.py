@@ -402,7 +402,7 @@ def create_primary_location_frequency_plot(primary_location_dictionary: dict):
 
 def main():
     print("Reading input list...")
-    input_list = read_input_file(filename="data/maitri_mishra.txt")
+    input_list = read_input_file(filename="data/zotero-export.txt")
     print("Input list read.")
     print("Cleaning input list...")
     cleaned_input_list = clean_input_list(input_list)

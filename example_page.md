@@ -5,7 +5,7 @@ The DOI file used for generation can be downloaded below; it is taken from a wor
 held by the National Academies of Science, Engineering, and Medicine in August 2020 on airborne
 transmission of SARS-CoV-2. [Workshop page viewable here.](https://www.nationalacademies.org/our-work/airborne-transmission-of-sars-cov-2-a-virtual-workshop#sectionPublications)
 
-![example](\\static\\COVID_computable_bibliography.png)
+<img src="https://raw.githubusercontent.com/infoqualitylab/ComputableBibliography-app/main/static/COVID_computable_bibliography.png" width=50% height=50%>
 [Image also viewable via link.](https://github.com/infoqualitylab/ComputableBibliography-app/blob/main/static/COVID_computable_bibliography.png)
 
 These visualizations give insight into the overall recency of the topic under investigation, as well as the wide variety of
